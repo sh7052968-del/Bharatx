@@ -1,0 +1,362 @@
+{
+  "entities": {
+    "UserProfile": {
+      "title": "UserProfile",
+      "description": "Private authenticated user profile, role assignment, settings, and business preferences.",
+      "type": "object",
+      "properties": {
+        "userId": { "type": "string" },
+        "displayName": { "type": "string" },
+        "email": { "type": "string" },
+        "role": { "type": "string", "enum": ["ADMIN", "BUSINESS_MANAGER", "AGENT", "MEMBER"] },
+        "department": { "type": "string" },
+        "presenceStatus": { "type": "string", "enum": ["ONLINE", "AWAY", "BUSY"] },
+        "businessName": { "type": "string" },
+        "businessCategory": { "type": "string" },
+        "verifiedBusiness": { "type": "boolean" },
+        "awayMessageEnabled": { "type": "boolean" },
+        "awayMessageText": { "type": "string" },
+        "greetingText": { "type": "string" },
+        "languageCode": { "type": "string", "enum": ["en", "hi", "as"] },
+        "themeMode": { "type": "string", "enum": ["SYSTEM", "LIGHT", "DARK"] },
+        "twoFactorEnabled": { "type": "boolean" },
+        "notificationsEnabled": { "type": "boolean" },
+        "lastSeenVisible": { "type": "boolean" },
+        "createdAt": { "type": "string", "format": "date-time" },
+        "updatedAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["userId", "displayName", "email", "role", "presenceStatus", "awayMessageEnabled", "awayMessageText", "greetingText", "createdAt", "updatedAt"]
+    },
+    "AdminGrant": {
+      "title": "AdminGrant",
+      "description": "Trusted admin role marker document.",
+      "type": "object",
+      "properties": {
+        "userId": { "type": "string" },
+        "grantedBy": { "type": "string" },
+        "createdAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["userId", "grantedBy", "createdAt"]
+    },
+    "DirectoryMember": {
+      "title": "DirectoryMember",
+      "description": "PII-free public workspace directory entry.",
+      "type": "object",
+      "properties": {
+        "userId": { "type": "string" },
+        "displayName": { "type": "string" },
+        "handle": { "type": "string" },
+        "department": { "type": "string" },
+        "presenceStatus": { "type": "string", "enum": ["ONLINE", "AWAY", "BUSY"] },
+        "role": { "type": "string", "enum": ["ADMIN", "BUSINESS_MANAGER", "AGENT", "MEMBER"] },
+        "workspaceScope": { "type": "string" },
+        "createdAt": { "type": "string", "format": "date-time" },
+        "updatedAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["userId", "displayName", "handle", "department", "presenceStatus", "role", "workspaceScope", "createdAt", "updatedAt"]
+    },
+    "Conversation": {
+      "title": "Conversation",
+      "description": "Direct, group, or business support conversation thread.",
+      "type": "object",
+      "properties": {
+        "title": { "type": "string" },
+        "type": { "type": "string", "enum": ["DIRECT", "GROUP", "SUPPORT"] },
+        "ownerId": { "type": "string" },
+        "memberUids": { "type": "array" },
+        "lastMessageText": { "type": "string" },
+        "lastSenderId": { "type": "string" },
+        "lastMessageAt": { "type": "string", "format": "date-time" },
+        "status": { "type": "string", "enum": ["OPEN", "PENDING", "RESOLVED"] },
+        "priority": { "type": "string", "enum": ["LOW", "NORMAL", "HIGH", "URGENT"] },
+        "labels": { "type": "array" },
+        "archivedByUids": { "type": "array" },
+        "mutedByUids": { "type": "array" },
+        "disappearingHours": { "type": "integer" },
+        "createdAt": { "type": "string", "format": "date-time" },
+        "updatedAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["title", "type", "ownerId", "memberUids", "lastMessageText", "lastSenderId", "lastMessageAt", "status", "priority", "labels", "createdAt", "updatedAt"]
+    },
+    "ChatMessage": {
+      "title": "ChatMessage",
+      "description": "Chat message with reply, edit, delete, reaction, pin, star, and voice metadata.",
+      "type": "object",
+      "properties": {
+        "conversationId": { "type": "string" },
+        "senderId": { "type": "string" },
+        "senderName": { "type": "string" },
+        "body": { "type": "string" },
+        "messageType": { "type": "string", "enum": ["TEXT", "ORDER_CARD", "QUICK_REPLY", "SYSTEM", "VOICE", "FILE"] },
+        "orderTotalCents": { "type": "integer" },
+        "attachmentNote": { "type": "string" },
+        "replyPreview": { "type": "string" },
+        "voiceDurationSec": { "type": "integer" },
+        "edited": { "type": "boolean" },
+        "deleted": { "type": "boolean" },
+        "pinned": { "type": "boolean" },
+        "starredByUids": { "type": "array" },
+        "reactions": { "type": "array" },
+        "readByUids": { "type": "array" },
+        "memberUids": { "type": "array" },
+        "createdAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["conversationId", "senderId", "senderName", "body", "messageType", "memberUids", "createdAt"]
+    },
+    "BroadcastChannel": {
+      "title": "BroadcastChannel",
+      "description": "Group/community broadcast channel.",
+      "type": "object",
+      "properties": {
+        "name": { "type": "string" },
+        "description": { "type": "string" },
+        "category": { "type": "string", "enum": ["ANNOUNCEMENTS", "ENGINEERING", "SALES", "COMMUNITY"] },
+        "ownerId": { "type": "string" },
+        "ownerName": { "type": "string" },
+        "memberUids": { "type": "array" },
+        "followerCount": { "type": "integer" },
+        "visibility": { "type": "string", "enum": ["WORKSPACE", "PRIVATE"] },
+        "createdAt": { "type": "string", "format": "date-time" },
+        "updatedAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["name", "description", "category", "ownerId", "ownerName", "memberUids", "followerCount", "visibility", "createdAt", "updatedAt"]
+    },
+    "ChannelPost": {
+      "title": "ChannelPost",
+      "description": "Channel announcement post.",
+      "type": "object",
+      "properties": {
+        "channelId": { "type": "string" },
+        "authorId": { "type": "string" },
+        "authorName": { "type": "string" },
+        "title": { "type": "string" },
+        "body": { "type": "string" },
+        "pinned": { "type": "boolean" },
+        "visibility": { "type": "string", "enum": ["WORKSPACE", "PRIVATE"] },
+        "memberUids": { "type": "array" },
+        "likesCount": { "type": "integer" },
+        "createdAt": { "type": "string", "format": "date-time" },
+        "updatedAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["channelId", "authorId", "authorName", "title", "body", "pinned", "visibility", "memberUids", "likesCount", "createdAt", "updatedAt"]
+    },
+    "CatalogItem": {
+      "title": "CatalogItem",
+      "description": "Business catalog item.",
+      "type": "object",
+      "properties": {
+        "ownerId": { "type": "string" },
+        "businessName": { "type": "string" },
+        "name": { "type": "string" },
+        "sku": { "type": "string" },
+        "description": { "type": "string" },
+        "priceCents": { "type": "integer" },
+        "currency": { "type": "string" },
+        "category": { "type": "string" },
+        "inStock": { "type": "boolean" },
+        "visibility": { "type": "string", "enum": ["PUBLIC_CATALOG", "DRAFT"] },
+        "createdAt": { "type": "string", "format": "date-time" },
+        "updatedAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["ownerId", "businessName", "name", "sku", "description", "priceCents", "currency", "category", "inStock", "visibility", "createdAt", "updatedAt"]
+    },
+    "BusinessOrder": {
+      "title": "BusinessOrder",
+      "description": "Deterministic business order.",
+      "type": "object",
+      "properties": {
+        "customerId": { "type": "string" },
+        "customerName": { "type": "string" },
+        "merchantId": { "type": "string" },
+        "itemId": { "type": "string" },
+        "itemName": { "type": "string" },
+        "quantity": { "type": "integer" },
+        "unitPriceCents": { "type": "integer" },
+        "totalCents": { "type": "integer" },
+        "status": { "type": "string", "enum": ["PENDING", "CONFIRMED", "FULFILLED", "CANCELLED"] },
+        "memberUids": { "type": "array" },
+        "createdAt": { "type": "string", "format": "date-time" },
+        "updatedAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["customerId", "customerName", "merchantId", "itemId", "itemName", "quantity", "unitPriceCents", "totalCents", "status", "memberUids", "createdAt", "updatedAt"]
+    },
+    "QuickReply": {
+      "title": "QuickReply",
+      "description": "Owner-scoped business quick reply.",
+      "type": "object",
+      "properties": {
+        "userId": { "type": "string" },
+        "shortcut": { "type": "string" },
+        "title": { "type": "string" },
+        "body": { "type": "string" },
+        "category": { "type": "string" },
+        "createdAt": { "type": "string", "format": "date-time" },
+        "updatedAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["userId", "shortcut", "title", "body", "category", "createdAt", "updatedAt"]
+    },
+    "ContactEntry": {
+      "title": "ContactEntry",
+      "description": "User-scoped contact entry with block state.",
+      "type": "object",
+      "properties": {
+        "userId": { "type": "string" },
+        "contactUid": { "type": "string" },
+        "displayName": { "type": "string" },
+        "handle": { "type": "string" },
+        "department": { "type": "string" },
+        "note": { "type": "string" },
+        "blocked": { "type": "boolean" },
+        "createdAt": { "type": "string", "format": "date-time" },
+        "updatedAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["userId", "displayName", "handle", "blocked", "createdAt", "updatedAt"]
+    },
+    "DeviceSession": {
+      "title": "DeviceSession",
+      "description": "Registered connected device session for security management.",
+      "type": "object",
+      "properties": {
+        "userId": { "type": "string" },
+        "deviceName": { "type": "string" },
+        "platform": { "type": "string" },
+        "trusted": { "type": "boolean" },
+        "createdAt": { "type": "string", "format": "date-time" },
+        "updatedAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["userId", "deviceName", "platform", "trusted", "createdAt", "updatedAt"]
+    },
+    "CustomerNote": {
+      "title": "CustomerNote",
+      "description": "Business CRM customer note and label.",
+      "type": "object",
+      "properties": {
+        "userId": { "type": "string" },
+        "customerName": { "type": "string" },
+        "label": { "type": "string" },
+        "note": { "type": "string" },
+        "createdAt": { "type": "string", "format": "date-time" },
+        "updatedAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["userId", "customerName", "label", "note", "createdAt", "updatedAt"]
+    },
+    "SubscriptionPlanRecord": {
+      "title": "SubscriptionPlanRecord",
+      "description": "User workspace subscription tier state.",
+      "type": "object",
+      "properties": {
+        "userId": { "type": "string" },
+        "planId": { "type": "string", "enum": ["STARTER", "GROWTH", "ENTERPRISE"] },
+        "planName": { "type": "string" },
+        "monthlyPriceCents": { "type": "integer" },
+        "status": { "type": "string", "enum": ["ACTIVE", "CANCELLED"] },
+        "createdAt": { "type": "string", "format": "date-time" },
+        "updatedAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["userId", "planId", "planName", "monthlyPriceCents", "status", "createdAt", "updatedAt"]
+    },
+    "InvoiceRecord": {
+      "title": "InvoiceRecord",
+      "description": "Immutable billing invoice entry.",
+      "type": "object",
+      "properties": {
+        "userId": { "type": "string" },
+        "invoiceNumber": { "type": "string" },
+        "planName": { "type": "string" },
+        "amountCents": { "type": "integer" },
+        "status": { "type": "string", "enum": ["PAID", "PENDING"] },
+        "createdAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["userId", "invoiceNumber", "planName", "amountCents", "status", "createdAt"]
+    },
+    "CallSession": {
+      "title": "CallSession",
+      "description": "Real-time voice, video, or group call record and signaling state.",
+      "type": "object",
+      "properties": {
+        "callerId": { "type": "string" },
+        "callerName": { "type": "string" },
+        "calleeId": { "type": "string" },
+        "calleeName": { "type": "string" },
+        "callType": { "type": "string", "enum": ["VOICE", "VIDEO", "GROUP"] },
+        "status": { "type": "string", "enum": ["RINGING", "ACTIVE", "ENDED", "MISSED", "DECLINED"] },
+        "durationSeconds": { "type": "integer" },
+        "memberUids": { "type": "array" },
+        "createdAt": { "type": "string", "format": "date-time" },
+        "updatedAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["callerId", "callerName", "calleeId", "calleeName", "callType", "status", "durationSeconds", "memberUids", "createdAt", "updatedAt"]
+    },
+    "StatusUpdate": {
+      "title": "StatusUpdate",
+      "description": "Workspace or private status feed entry.",
+      "type": "object",
+      "properties": {
+        "authorId": { "type": "string" },
+        "authorName": { "type": "string" },
+        "text": { "type": "string" },
+        "mediaType": { "type": "string", "enum": ["TEXT", "IMAGE", "VIDEO"] },
+        "mediaNote": { "type": "string" },
+        "visibility": { "type": "string", "enum": ["WORKSPACE", "PRIVATE"] },
+        "reactionsCount": { "type": "integer" },
+        "memberUids": { "type": "array" },
+        "createdAt": { "type": "string", "format": "date-time" },
+        "updatedAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["authorId", "authorName", "text", "mediaType", "visibility", "reactionsCount", "memberUids", "createdAt", "updatedAt"]
+    },
+    "SupportTicket": {
+      "title": "SupportTicket",
+      "description": "Support center ticket with deterministic priority triage.",
+      "type": "object",
+      "properties": {
+        "userId": { "type": "string" },
+        "userName": { "type": "string" },
+        "subject": { "type": "string" },
+        "category": { "type": "string" },
+        "description": { "type": "string" },
+        "priority": { "type": "string", "enum": ["LOW", "NORMAL", "HIGH", "URGENT"] },
+        "status": { "type": "string", "enum": ["OPEN", "IN_PROGRESS", "RESOLVED"] },
+        "createdAt": { "type": "string", "format": "date-time" },
+        "updatedAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["userId", "userName", "subject", "category", "description", "priority", "status", "createdAt", "updatedAt"]
+    },
+    "AuditLog": {
+      "title": "AuditLog",
+      "description": "Immutable compliance audit log.",
+      "type": "object",
+      "properties": {
+        "actorId": { "type": "string" },
+        "actorName": { "type": "string" },
+        "action": { "type": "string" },
+        "targetType": { "type": "string" },
+        "targetId": { "type": "string" },
+        "summary": { "type": "string" },
+        "createdAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["actorId", "actorName", "action", "targetType", "targetId", "summary", "createdAt"]
+    }
+  },
+  "firestore": {
+    "/users/{userId}": { "schema": { "$ref": "#/entities/UserProfile" }, "description": "User profiles and preferences." },
+    "/admins/{userId}": { "schema": { "$ref": "#/entities/AdminGrant" }, "description": "Admin role registry." },
+    "/directory_profiles/{userId}": { "schema": { "$ref": "#/entities/DirectoryMember" }, "description": "PII-free directory." },
+    "/conversations/{conversationId}": { "schema": { "$ref": "#/entities/Conversation" }, "description": "Chat threads." },
+    "/conversations/{conversationId}/messages/{messageId}": { "schema": { "$ref": "#/entities/ChatMessage" }, "description": "Messages." },
+    "/channels/{channelId}": { "schema": { "$ref": "#/entities/BroadcastChannel" }, "description": "Channels and communities." },
+    "/channels/{channelId}/posts/{postId}": { "schema": { "$ref": "#/entities/ChannelPost" }, "description": "Channel posts." },
+    "/catalog_items/{itemId}": { "schema": { "$ref": "#/entities/CatalogItem" }, "description": "Catalog items." },
+    "/orders/{orderId}": { "schema": { "$ref": "#/entities/BusinessOrder" }, "description": "Orders." },
+    "/users/{userId}/quick_replies/{replyId}": { "schema": { "$ref": "#/entities/QuickReply" }, "description": "Quick replies." },
+    "/users/{userId}/contacts/{contactId}": { "schema": { "$ref": "#/entities/ContactEntry" }, "description": "Personal contacts." },
+    "/users/{userId}/devices/{deviceId}": { "schema": { "$ref": "#/entities/DeviceSession" }, "description": "Connected devices." },
+    "/users/{userId}/customer_notes/{noteId}": { "schema": { "$ref": "#/entities/CustomerNote" }, "description": "CRM customer notes." },
+    "/users/{userId}/subscription/{subId}": { "schema": { "$ref": "#/entities/SubscriptionPlanRecord" }, "description": "Billing plan." },
+    "/users/{userId}/invoices/{invoiceId}": { "schema": { "$ref": "#/entities/InvoiceRecord" }, "description": "Billing invoices." },
+    "/calls/{callId}": { "schema": { "$ref": "#/entities/CallSession" }, "description": "Call sessions and history." },
+    "/statuses/{statusId}": { "schema": { "$ref": "#/entities/StatusUpdate" }, "description": "Status feed." },
+    "/support_tickets/{ticketId}": { "schema": { "$ref": "#/entities/SupportTicket" }, "description": "Support tickets." },
+    "/audit_logs/{logId}": { "schema": { "$ref": "#/entities/AuditLog" }, "description": "Immutable audit logs." }
+  }
+}
